@@ -386,7 +386,7 @@
     <div id="tsparticles"></div>
     
     <!-- Background Music -->
-    <audio id="bgMusic" loop>
+    <audio id="bgMusic" loop autoplay>
         <source src="sONG/beabadoobee - Glue Song (Official Music Video).mp3" type="audio/mpeg">
     </audio>
     
@@ -451,14 +451,36 @@
         // Set ambient volume (20% for background ambiance)
         bgMusic.volume = 0.2;
         
-        // Auto-play music when page loads
-        bgMusic.play().catch(e => {
-            // If autoplay is blocked, play on first user interaction
-            document.addEventListener('click', function initMusic() {
-                bgMusic.play().catch(err => console.log('Audio play failed:', err));
-                document.removeEventListener('click', initMusic);
-            }, { once: true });
-        });
+        // Multiple autoplay attempts
+        function attemptAutoplay() {
+            const playPromise = bgMusic.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(e => {
+                    console.log('Autoplay prevented, waiting for user interaction');
+                    // Fallback: play on ANY user interaction
+                    const playOnInteraction = () => {
+                        bgMusic.play().catch(err => console.log('Play failed:', err));
+                        document.removeEventListener('click', playOnInteraction);
+                        document.removeEventListener('touchstart', playOnInteraction);
+                        document.removeEventListener('scroll', playOnInteraction);
+                    };
+                    
+                    document.addEventListener('click', playOnInteraction, { once: true });
+                    document.addEventListener('touchstart', playOnInteraction, { once: true });
+                    document.addEventListener('scroll', playOnInteraction, { once: true });
+                });
+            }
+        }
+        
+        // Try to play immediately
+        attemptAutoplay();
+        
+        // Also try after a short delay
+        setTimeout(attemptAutoplay, 100);
+        
+        // Try when page is fully loaded
+        window.addEventListener('load', attemptAutoplay);
         
         // Toggle mute/unmute
         musicToggle.addEventListener('click', () => {
