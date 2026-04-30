@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Letter QR Code</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background: #F5EFE0;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #C07B6A;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            color: #1C1A17;
+            margin-bottom: 30px;
+        }
+        
+        #qrcode {
+            display: inline-block;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+        }
+        
+        .url {
+            margin-top: 20px;
+            padding: 15px;
+            background: #F5EFE0;
+            border-radius: 8px;
+            word-break: break-all;
+            font-family: monospace;
+            color: #1C1A17;
+        }
+        
+        input {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px;
+            margin: 20px 0;
+            border: 2px solid #C07B6A;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        button {
+            background: #C07B6A;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: #A66959;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💌 Love Letter QR Code</h1>
+        <p>Scan to open the love letter website</p>
+        
+        <div>
+            <label for="urlInput">Enter your Vercel deployment URL:</label>
+            <input type="text" id="urlInput" placeholder="https://your-site.vercel.app" />
+            <button onclick="generateQR()">Generate QR Code</button>
+        </div>
+        
+        <div id="qrcode" style="margin-top: 30px;"></div>
+        <div class="url" id="urlDisplay" style="display: none;"></div>
+        
+        <p style="margin-top: 20px; font-size: 14px; color: #666;">
+            Save this QR code by right-clicking and selecting "Save image as..."
+        </p>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        let qrcode = null;
+        
+        function generateQR() {
+            const url = document.getElementById('urlInput').value.trim();
+            
+            if (!url) {
+                alert('Please enter your Vercel URL');
+                return;
+            }
+            
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                alert('Please enter a valid URL starting with http:// or https://');
+                return;
+            }
+            
+            // Clear previous QR code
+            document.getElementById('qrcode').innerHTML = '';
+            
+            // Generate new QR code
+            qrcode = new QRCode(document.getElementById('qrcode'), {
+                text: url,
+                width: 300,
+                height: 300,
+                colorDark: '#1C1A17',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            // Display URL
+            const urlDisplay = document.getElementById('urlDisplay');
+            urlDisplay.textContent = url;
+            urlDisplay.style.display = 'block';
+        }
+        
+        // Auto-generate if URL is in hash
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                document.getElementById('urlInput').value = decodeURIComponent(hash);
+                generateQR();
+            }
+        });
+    </script>
+</body>
+</html>
