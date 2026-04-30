@@ -574,40 +574,41 @@
             });
         });
         
-        // Paragraph reveal on scroll - Sequential typewriter animation
+        // Typewriter animation - Auto-play on page load
         const paragraphs = document.querySelectorAll('.paragraph');
-        let currentlyTyping = false;
-        const animatedParagraphs = new Set();
         
-        paragraphs.forEach((p, index) => {
-            ScrollTrigger.create({
-                trigger: p,
-                start: 'top 80%',
-                onEnter: () => {
-                    if (!animatedParagraphs.has(index) && !currentlyTyping) {
-                        animatedParagraphs.add(index);
-                        currentlyTyping = true;
-                        p.classList.add('visible');
-                        
-                        // Typewriter effect
-                        const text = p.textContent;
-                        p.textContent = '';
-                        p.style.opacity = 1;
-                        
-                        let i = 0;
-                        const typeInterval = setInterval(() => {
-                            if (i < text.length) {
-                                p.textContent += text.charAt(i);
-                                i++;
-                            } else {
-                                clearInterval(typeInterval);
-                                currentlyTyping = false;
-                            }
-                        }, 15);
-                    }
-                }
-            });
+        // Store original text content
+        const paragraphTexts = Array.from(paragraphs).map(p => p.textContent);
+        
+        // Clear all paragraphs and make them visible
+        paragraphs.forEach(p => {
+            p.textContent = '';
+            p.style.opacity = 1;
+            p.classList.add('visible');
         });
+        
+        // Type paragraphs sequentially
+        function typeParagraph(index) {
+            if (index >= paragraphs.length) return;
+            
+            const p = paragraphs[index];
+            const text = paragraphTexts[index];
+            let i = 0;
+            
+            const typeInterval = setInterval(() => {
+                if (i < text.length) {
+                    p.textContent += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typeInterval);
+                    // Type next paragraph after a short delay
+                    setTimeout(() => typeParagraph(index + 1), 200);
+                }
+            }, 15);
+        }
+        
+        // Start typing after intro animation
+        setTimeout(() => typeParagraph(0), 2000);
         
         // Signature reveal
         ScrollTrigger.create({
