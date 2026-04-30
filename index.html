@@ -307,6 +307,7 @@
                 margin: 30px auto;
                 width: 200px;
                 height: auto;
+                z-index: 1;
             }
             
             .floating-photo-element {
@@ -322,6 +323,12 @@
             .floating-photo-element.medium {
                 width: 150px;
                 height: 200px;
+            }
+            
+            /* Ensure text is above images */
+            .letter-body p {
+                position: relative;
+                z-index: 2;
             }
             
             .lily-emoji {
