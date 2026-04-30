@@ -297,8 +297,31 @@
                 margin-bottom: 80px;
             }
             
+            /* Show GIFs and photos inline on mobile */
             .floating-gif, .floating-photo-element {
-                display: none;
+                position: relative;
+                display: block;
+                left: 0 !important;
+                right: 0 !important;
+                top: 0 !important;
+                margin: 30px auto;
+                width: 200px;
+                height: auto;
+            }
+            
+            .floating-photo-element {
+                width: 160px;
+                height: 213px;
+            }
+            
+            .floating-photo-element.small {
+                width: 140px;
+                height: 187px;
+            }
+            
+            .floating-photo-element.medium {
+                width: 150px;
+                height: 200px;
             }
             
             .lily-emoji {
