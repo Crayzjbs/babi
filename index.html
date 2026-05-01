@@ -297,17 +297,36 @@
                 margin-bottom: 80px;
             }
             
-            /* Show GIFs and photos inline on mobile */
+            /* Reorganize layout for mobile - images at bottom */
+            .letter-body {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            /* Text paragraphs appear first */
+            .letter-body p {
+                order: 1;
+                position: relative;
+                z-index: 2;
+            }
+            
+            /* Signature appears after paragraphs */
+            .signature {
+                order: 2;
+            }
+            
+            /* All images and GIFs appear at the bottom */
             .floating-gif, .floating-photo-element {
                 position: relative;
                 display: block;
                 left: 0 !important;
                 right: 0 !important;
                 top: 0 !important;
-                margin: 30px auto;
+                margin: 15px auto;
                 width: 200px;
                 height: auto;
                 z-index: 1;
+                order: 3;
             }
             
             .floating-photo-element {
@@ -323,12 +342,6 @@
             .floating-photo-element.medium {
                 width: 150px;
                 height: 200px;
-            }
-            
-            /* Ensure text is above images */
-            .letter-body p {
-                position: relative;
-                z-index: 2;
             }
             
             .lily-emoji {
