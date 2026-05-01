@@ -297,9 +297,35 @@
                 margin-bottom: 80px;
             }
             
-            /* Hide all floating images and GIFs on mobile */
+            /* Show images as static gallery at bottom on mobile */
             .floating-gif, .floating-photo-element {
-                display: none !important;
+                position: static !important;
+                display: block !important;
+                left: auto !important;
+                right: auto !important;
+                top: auto !important;
+                margin: 20px auto !important;
+                transform: none !important;
+            }
+            
+            .floating-gif {
+                width: 220px;
+                height: auto;
+            }
+            
+            .floating-photo-element {
+                width: 180px;
+                height: 240px;
+            }
+            
+            .floating-photo-element.small {
+                width: 160px;
+                height: 213px;
+            }
+            
+            .floating-photo-element.medium {
+                width: 170px;
+                height: 227px;
             }
             
             .letter-body p {
@@ -538,19 +564,21 @@
             }
         });
         
-        // Parallax on floating GIFs and Photos
-        document.querySelectorAll('.floating-gif, .floating-photo-element').forEach(element => {
-            const speed = element.getAttribute('data-speed') || 0.5;
-            gsap.to(element, {
-                y: -300 * speed,
-                scrollTrigger: {
-                    trigger: element,
-                    start: 'top bottom',
-                    end: 'bottom top',
-                    scrub: 1
-                }
+        // Parallax on floating GIFs and Photos (desktop only)
+        if (window.innerWidth > 768) {
+            document.querySelectorAll('.floating-gif, .floating-photo-element').forEach(element => {
+                const speed = element.getAttribute('data-speed') || 0.5;
+                gsap.to(element, {
+                    y: -300 * speed,
+                    scrollTrigger: {
+                        trigger: element,
+                        start: 'top bottom',
+                        end: 'bottom top',
+                        scrub: 1
+                    }
+                });
             });
-        });
+        }
         
         // Typewriter animation - Auto-play on page load
         const paragraphs = document.querySelectorAll('.paragraph');
